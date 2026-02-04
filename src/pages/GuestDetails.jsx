@@ -187,7 +187,8 @@ export default function GuestDetails() {
   );
 
   const fetchPropertyDetails = useCallback(async () => {
-    const propertyId = getPropertyIdFromSession();
+    // const propertyId = getPropertyIdFromSession();
+    const propertyId = 1;
 
     if (!propertyId) {
       console.warn("Property ID not found in session storage");
@@ -199,7 +200,7 @@ export default function GuestDetails() {
         params: { propertyId },
       });
 
-      console.log("🏨 Property Details API Response:", response.data);
+      console.log("🏨 Property Details API Response:", response.data.name);
 
       // ✅ store for later use (PDF / header / etc.)
       setPropertyDetails(response.data);
