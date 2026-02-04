@@ -1,6 +1,7 @@
-// pages/GuestDetails.jsx
-
+// // pages/GuestDetails.jsx
 import React, { useState, useEffect, useCallback } from "react";
+import apiClient from "../services/apiClient";
+import { API_ENDPOINTS } from "../constants/config";
 import dayjs from "dayjs";
 import { DATE_CONDITIONS } from "../constants/ui.js";
 import { FiDownload, FiRefreshCw, FiAlertCircle } from "react-icons/fi";
@@ -12,13 +13,25 @@ import { formatShortDate } from "../utility/bookingUtils.js";
 import { exportToPDF, exportToExcel } from "../utility/exportUtils";
 import { guestDetailsService } from "../services/guestDetailsService";
 import { transformGuestsArray } from "../utility/guestDataTransformer";
+import { STORAGE_KEYS } from "../constants/config.js";
 
-/* ---------------- PROPERTY DETAILS ---------------- */
-const PROPERTY_DETAILS = {
-  propertyName: "Silver Sands Resort & Spa",
-  propertyAddress:
-    "Plot No. 45, Banjara Hills, Road No. 12, Hyderabad, Telangana - 500034",
-  correspondingPoliceStation: "Banjara Hills Police Station, Hyderabad",
+/*  -- Get Property ID from Session Storage -- */
+const getPropertyIdFromSession = () => {
+  try {
+    const userData = sessionStorage.getItem(STORAGE_KEYS.USER_DATA);
+    if (!userData) return null;
+
+    const parsed = JSON.parse(userData);
+
+    // ✅ propertyIds is an array → take first one
+    const propertyId = parsed?.propertyIds?.[0];
+
+    console.log("Resolved propertyId from session:", propertyId);
+    return propertyId || null;
+  } catch (err) {
+    console.error("Failed to read USER_DATA from sessionStorage", err);
+    return null;
+  }
 };
 
 /* ---------------- UTILITY FUNCTIONS ---------------- */
@@ -63,6 +76,7 @@ export default function GuestDetails() {
   const [showModal, setShowModal] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [propertyDetails, setPropertyDetails] = useState(null);
 
   // Loading and Error States
   const [isLoading, setIsLoading] = useState(true);
@@ -172,10 +186,33 @@ export default function GuestDetails() {
     [],
   );
 
+  const fetchPropertyDetails = useCallback(async () => {
+    const propertyId = getPropertyIdFromSession();
+
+    if (!propertyId) {
+      console.warn("Property ID not found in session storage");
+      return;
+    }
+
+    try {
+      const response = await apiClient.get(API_ENDPOINTS.PROPERTY_BY_ID, {
+        params: { propertyId },
+      });
+
+      console.log("🏨 Property Details API Response:", response.data);
+
+      // ✅ store for later use (PDF / header / etc.)
+      setPropertyDetails(response.data);
+    } catch (error) {
+      console.error("❌ Error fetching property details:", error);
+    }
+  }, []);
+
   /* ---------------- INITIAL DATA LOAD ---------------- */
   useEffect(() => {
     fetchGuestDetails();
-  }, [fetchGuestDetails]);
+    fetchPropertyDetails(); // 👈
+  }, [fetchGuestDetails, fetchPropertyDetails]);
 
   /* ---------------- APPLY FILTERS ---------------- */
   const applyAllFilters = useCallback(() => {
@@ -1007,7 +1044,8 @@ export default function GuestDetails() {
           { key: "checkInDate", label: "Check-in Date" },
           { key: "firstName", label: "First Name" },
           { key: "lastName", label: "Surname" },
-          { key: "bookingId", label: "Booking ID" },
+          // { key: "bookingId", label: "Booking ID" },
+          { key: "propertyName", label: "Hotel Name" },
           { key: "maskedAadhaar", label: "Aadhaar Number" },
           { key: "city", label: "City" },
           { key: "state", label: "State" },
@@ -1025,6 +1063,7 @@ export default function GuestDetails() {
               className="w-4 h-4 rounded border-gray-300 text-[#1b3631] focus:ring-[#1b3631] cursor-pointer"
             />
           ),
+          propertyName: () => propertyDetails?.name || "N/A",
           checkInDate: (_, row) => formatShortDate(row.date),
           maskedAadhaar: (_, row) => maskAadhaar(row.aadhaarNumber),
           verificationStatus: (status, row) => {
