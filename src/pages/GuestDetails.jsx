@@ -102,7 +102,7 @@ export default function GuestDetails() {
 
   const [filters, setFilters] = useState({
     name: "",
-    bookingId: "",
+    hotelName: "",
     city: "",
     state: "",
   });
@@ -247,15 +247,18 @@ export default function GuestDetails() {
     }
 
     // Booking ID filter
-    if (filters.bookingId) {
-      console.log("Filter Debug - Applying bookingId filter:", {
-        query: filters.bookingId,
+    if (filters.hotelName) {
+      console.log("Filter Debug - Applying hotelName filter:", {
+        query: filters.hotelName,
         count: data.length,
       });
+      const q = filters.hotelName.toLowerCase();
       data = data.filter((g) =>
-        g.bookingId?.toLowerCase().includes(filters.bookingId.toLowerCase()),
+        (g.propertyName || propertyDetails?.name || "")
+          .toLowerCase()
+          .includes(q),
       );
-      console.log("Filter Debug - After bookingId filter:", {
+      console.log("Filter Debug - After hotelName filter:", {
         count: data.length,
       });
     }
@@ -362,7 +365,7 @@ export default function GuestDetails() {
   const clearFilters = () => {
     setFilters({
       name: "",
-      bookingId: "",
+      hotelName: "",
       city: "",
       state: "",
     });
@@ -898,12 +901,14 @@ export default function GuestDetails() {
           />
           <input
             type="text"
-            name="bookingId"
-            placeholder="Booking ID"
-            value={filters.bookingId}
+            name="hotelName"
+            placeholder="Hotel Name"
+            value={filters.hotelName}
             onChange={handleInputChange}
-            className="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1b3631] focus:border-[#1b3631]"
+            className="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg
+             focus:ring-2 focus:ring-[#1b3631] focus:border-[#1b3631]"
           />
+
           <input
             type="text"
             name="city"
@@ -922,7 +927,7 @@ export default function GuestDetails() {
           />
         </div>
         {(filters.name ||
-          filters.bookingId ||
+          filters.hotelName ||
           filters.city ||
           filters.state) && (
           <button
@@ -1042,10 +1047,9 @@ export default function GuestDetails() {
             ),
           },
           { key: "checkInDate", label: "Check-in Date" },
+          { key: "propertyName", label: "Hotel Name" },
           { key: "firstName", label: "First Name" },
           { key: "lastName", label: "Surname" },
-          // { key: "bookingId", label: "Booking ID" },
-          { key: "propertyName", label: "Hotel Name" },
           { key: "maskedAadhaar", label: "Aadhaar Number" },
           { key: "city", label: "City" },
           { key: "state", label: "State" },
