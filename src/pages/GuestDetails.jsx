@@ -688,10 +688,6 @@ export default function GuestDetails() {
           yPos + 32,
         );
 
-        // Right side — DigiLocker Reference ID
-        addFieldLabel("DigiLocker Reference ID", col2X, yPos + 27);
-        addFieldValue(guest.digiLockerReferenceId || "N/A", col2X, yPos + 32);
-
         yPos += hasImage ? 50 : 40;
 
         // Row 4: Aadhaar & Verification Timestamp (full width)
@@ -715,6 +711,10 @@ export default function GuestDetails() {
           yPos + 4,
           contentWidth,
         );
+
+        // Right side — DigiLocker Reference ID
+        addFieldLabel("DigiLocker Reference ID", col2X, yPos);
+        addFieldValue(guest.digiLockerReferenceId || "N/A", col2X, yPos + 4);
 
         yPos += 12;
         drawHorizontalLine(yPos);

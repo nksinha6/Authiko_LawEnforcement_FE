@@ -86,12 +86,12 @@ const GuestDetailsModal = ({ show, handleClose, guest }) => {
   };
 
   // Utility function to mask phone number
-  const maskPhone = (phone) => {
-    if (!phone || phone.length < 10) return phone || "N/A";
-    const last4 = phone.slice(-4);
-    const first3 = phone.slice(0, 3);
-    return `${first3}XXXXX${last4}`;
-  };
+  // const maskPhone = (phone) => {
+  //   if (!phone || phone.length < 10) return phone || "N/A";
+  //   const last4 = phone.slice(-4);
+  //   const first3 = phone.slice(0, 3);
+  //   return `${first3}XXXXX${last4}`;
+  // };
 
   // Get status badge color
   const getStatusBadgeStyle = (status) => {
@@ -350,22 +350,6 @@ const GuestDetailsModal = ({ show, handleClose, guest }) => {
         statusTextY,
       );
 
-      // DigiLocker Ref ID (Right column, aligned with Nationality)
-      doc.setFont("helvetica", "bold");
-      doc.setTextColor(100, 100, 100);
-      doc.text("DigiLocker Ref ID", infoCol2X, textY + 24);
-
-      doc.setFont("helvetica", "normal");
-      doc.setTextColor(0, 0, 0);
-
-      // Truncate long ID safely
-      const digiRef =
-        guestData.digiLockerReferenceId.length > 28
-          ? guestData.digiLockerReferenceId.substring(0, 28) + "..."
-          : guestData.digiLockerReferenceId;
-
-      doc.text(digiRef, infoCol2X, textY + 29);
-
       yPos += 45;
 
       // Aadhaar and Verification details
@@ -389,6 +373,33 @@ const GuestDetailsModal = ({ show, handleClose, guest }) => {
         yPos + 5,
       );
 
+      yPos += 12;
+
+      // New Row: DigiLocker Verification ID (full width)
+
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(100, 100, 100);
+      doc.text("DigiLocker Verification ID", margin, yPos);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(0, 0, 0);
+      doc.text(guestData.verificationId || "N/A", margin, yPos + 5);
+
+      // // DigiLocker Ref ID (Right column, aligned with Nationality)
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(100, 100, 100);
+      doc.text("DigiLocker Ref ID", pageWidth / 2 + 10, yPos);
+
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(0, 0, 0);
+
+      // Truncate long ID safely
+      const digiRef =
+        guestData.digiLockerReferenceId.length > 28
+          ? guestData.digiLockerReferenceId.substring(0, 28) + "..."
+          : guestData.digiLockerReferenceId;
+
+      doc.text(digiRef, pageWidth / 2 + 10, yPos + 5);
+
       yPos += 10;
 
       // Horizontal line
@@ -411,7 +422,7 @@ const GuestDetailsModal = ({ show, handleClose, guest }) => {
       doc.text("Mobile Number", margin, yPos);
       doc.setFont("helvetica", "normal");
       doc.setTextColor(0, 0, 0);
-      doc.text(maskPhone(guestData.mobileNumber), margin, yPos + 5);
+      doc.text(guestData.mobileNumber || "N/A", margin, yPos + 5);
 
       // Email ID
       doc.setFont("helvetica", "bold");
@@ -752,7 +763,7 @@ const GuestDetailsModal = ({ show, handleClose, guest }) => {
                 <div>
                   <p className="text-sm text-gray-500">Mobile Number</p>
                   <p className="font-medium text-gray-800">
-                    {maskPhone(guestData.mobileNumber)}
+                    {guestData.mobileNumber || "N/A"}
                   </p>
                 </div>
                 <div>
