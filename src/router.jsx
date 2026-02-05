@@ -6,7 +6,7 @@ import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import { ROUTES } from "./constants/ui.js";
 
 // ✅ Compute basename as a string first
-const basename = import.meta.env.DEV ? "/" : "/biz";
+const basename = import.meta.env.DEV ? "/" : "/law";
 
 const routes = [
   {
