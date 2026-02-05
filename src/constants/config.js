@@ -14,7 +14,7 @@ export const API_ENDPOINTS = {
 
 // Storage Keys
 export const STORAGE_DATA_KEYS = {
-  AUTH: "onepass_auth",
+  AUTH: "onepass_auth_Law",
   ACCESS_DATA_TOKEN: "onepass_ACCESS_DATA_TOKEN_Law",
   REFRESH_DATA_TOKEN: "onepass_REFRESH_DATA_TOKEN_Law",
   TOKEN_EXPIRES_AT: "onepass_token_expires_at_Law",
