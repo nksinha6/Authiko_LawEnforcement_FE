@@ -35,28 +35,28 @@ const getPropertyIdFromSession = () => {
 };
 
 /* ---------------- UTILITY FUNCTIONS ---------------- */
-const maskAadhaar = (aadhaar) => {
-  if (!aadhaar) return "XXXX-XXXX-XXXX";
-  if (aadhaar.toLowerCase().includes("x")) {
-    const cleanAadhaar = aadhaar.replace(/[^0-9x]/gi, "");
-    if (cleanAadhaar.length >= 12) {
-      return `${cleanAadhaar.slice(0, 4)}-${cleanAadhaar.slice(4, 8)}-${cleanAadhaar.slice(8, 12)}`;
-    }
-    return aadhaar;
-  }
-  if (aadhaar.length === 12) {
-    const lastFour = aadhaar.slice(-4);
-    return `XXXX-XXXX-${lastFour}`;
-  }
-  return "XXXX-XXXX-XXXX";
-};
+// const maskAadhaar = (aadhaar) => {
+//   if (!aadhaar) return "XXXX-XXXX-XXXX";
+//   if (aadhaar.toLowerCase().includes("x")) {
+//     const cleanAadhaar = aadhaar.replace(/[^0-9x]/gi, "");
+//     if (cleanAadhaar.length >= 12) {
+//       return `${cleanAadhaar.slice(0, 4)}-${cleanAadhaar.slice(4, 8)}-${cleanAadhaar.slice(8, 12)}`;
+//     }
+//     return aadhaar;
+//   }
+//   if (aadhaar.length === 12) {
+//     const lastFour = aadhaar.slice(-4);
+//     return `XXXX-XXXX-${lastFour}`;
+//   }
+//   return "XXXX-XXXX-XXXX";
+// };
 
-const maskPhone = (phone) => {
-  if (!phone || phone.length < 10) return phone || "N/A";
-  const last4 = phone.slice(-4);
-  const first3 = phone.slice(0, 3);
-  return `${first3}XXXXX${last4}`;
-};
+// const maskPhone = (phone) => {
+//   if (!phone || phone.length < 10) return phone || "N/A";
+//   const last4 = phone.slice(-4);
+//   const first3 = phone.slice(0, 3);
+//   return `${first3}XXXXX${last4}`;
+// };
 
 const getGuestImageKey = (guest) => {
   return [
@@ -97,7 +97,7 @@ export default function GuestDetails() {
   const exportData = filteredGuests.map((g) => ({
     ...g,
     checkInDate: formatShortDate(g.date),
-    maskedAadhaar: maskAadhaar(g.aadhaarNumber),
+    maskedAadhaar: g.aadhaarNumber || "N/A",
   }));
 
   const [filters, setFilters] = useState({
@@ -696,13 +696,24 @@ export default function GuestDetails() {
 
         // Row 4: Aadhaar & Verification Timestamp (full width)
         addFieldLabel("Masked Aadhaar Number", col1X, yPos);
-        addFieldValue(maskAadhaar(guest.aadhaarNumber), col1X, yPos + 4);
+        addFieldValue(guest.aadhaarNumber || "N/A", col1X, yPos + 4);
 
         addFieldLabel("Verification Timestamp", col2X, yPos);
         addFieldValue(
           guest.aadhaarVerificationTimestamp || "N/A",
           col2X,
           yPos + 4,
+        );
+
+        yPos += 12;
+
+        // New Row: DigiLocker Verification ID (full width)
+        addFieldLabel("DigiLocker Verification ID", col1X, yPos);
+        addFieldValue(
+          guest.verificationId || "N/A",
+          col1X,
+          yPos + 4,
+          contentWidth,
         );
 
         yPos += 12;
@@ -717,7 +728,12 @@ export default function GuestDetails() {
 
         // Row 1: Mobile & Email
         addFieldLabel("Mobile Number", col1X, yPos + 3);
-        addFieldValue(maskPhone(guest.phone), col1X, yPos + 7);
+
+        addFieldValue(
+          guest.phone || guest.phoneNumber || "N/A",
+          col1X,
+          yPos + 7,
+        );
 
         addFieldLabel("Email ID", col2X, yPos + 3);
         const emailDisplay =
@@ -1070,7 +1086,7 @@ export default function GuestDetails() {
           ),
           propertyName: () => propertyDetails?.name || "N/A",
           checkInDate: (_, row) => formatShortDate(row.date),
-          maskedAadhaar: (_, row) => maskAadhaar(row.aadhaarNumber),
+          maskedAadhaar: (_, row) => row.aadhaarNumber || "N/A",
           verificationStatus: (status, row) => {
             const displayStatus = row.verificationStatus || status || "Unknown";
             return getStatusBadge(displayStatus);
