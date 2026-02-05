@@ -1,12 +1,12 @@
-import { STORAGE_KEYS } from "../constants/config.js";
+import { STORAGE_DATA_KEYS } from "../constants/config.js";
 
 export const getIdsFromStorage = () => {
   if (typeof window === "undefined") {
     return { tenantId: null, propertyIds: [] };
   }
 
-  const sessionData = sessionStorage.getItem(STORAGE_KEYS.USER_DATA);
-  const localData = localStorage.getItem(STORAGE_KEYS.USER_DATA);
+  const sessionData = sessionStorage.getItem(STORAGE_DATA_KEYS.USER_DATA);
+  const localData = localStorage.getItem(STORAGE_DATA_KEYS.USER_DATA);
   const storedData = sessionData || localData;
 
   if (storedData) {

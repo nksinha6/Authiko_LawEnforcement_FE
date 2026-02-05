@@ -13,12 +13,12 @@ import { formatShortDate } from "../utility/bookingUtils.js";
 import { exportToPDF, exportToExcel } from "../utility/exportUtils";
 import { guestDetailsService } from "../services/guestDetailsService";
 import { transformGuestsArray } from "../utility/guestDataTransformer";
-import { STORAGE_KEYS } from "../constants/config.js";
+import { STORAGE_DATA_KEYS } from "../constants/config.js";
 
 /*  -- Get Property ID from Session Storage -- */
 const getPropertyIdFromSession = () => {
   try {
-    const userData = sessionStorage.getItem(STORAGE_KEYS.USER_DATA);
+    const userData = sessionStorage.getItem(STORAGE_DATA_KEYS.USER_DATA);
     if (!userData) return null;
 
     const parsed = JSON.parse(userData);

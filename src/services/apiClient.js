@@ -1,5 +1,5 @@
 import axios from "axios";
-import { STORAGE_KEYS } from "../constants/config.js";
+import { STORAGE_DATA_KEYS } from "../constants/config.js";
 
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -12,8 +12,8 @@ const apiClient = axios.create({
 // Add auth token automatically
 apiClient.interceptors.request.use((config) => {
   // Prefer sessionStorage token (non-remembered session) then localStorage (remembered)
-  const sessionToken = sessionStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
-  const localToken = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
+  const sessionToken = sessionStorage.getItem(STORAGE_DATA_KEYS.ACCESS_TOKEN);
+  const localToken = localStorage.getItem(STORAGE_DATA_KEYS.ACCESS_TOKEN);
   const token = sessionToken || localToken;
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -28,14 +28,14 @@ apiClient.interceptors.response.use(
     if (err.response?.status === 401) {
       // Auto logout or redirect if needed
       // Clear from both storages
-      localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
-      localStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
-      localStorage.removeItem(STORAGE_KEYS.TOKEN_EXPIRES_AT);
-      localStorage.removeItem(STORAGE_KEYS.AUTH);
-      sessionStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
-      sessionStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
-      sessionStorage.removeItem(STORAGE_KEYS.TOKEN_EXPIRES_AT);
-      sessionStorage.removeItem(STORAGE_KEYS.AUTH);
+      localStorage.removeItem(STORAGE_DATA_KEYS.ACCESS_TOKEN);
+      localStorage.removeItem(STORAGE_DATA_KEYS.REFRESH_TOKEN);
+      localStorage.removeItem(STORAGE_DATA_KEYS.TOKEN_EXPIRES_AT);
+      localStorage.removeItem(STORAGE_DATA_KEYS.AUTH);
+      sessionStorage.removeItem(STORAGE_DATA_KEYS.ACCESS_TOKEN);
+      sessionStorage.removeItem(STORAGE_DATA_KEYS.REFRESH_TOKEN);
+      sessionStorage.removeItem(STORAGE_DATA_KEYS.TOKEN_EXPIRES_AT);
+      sessionStorage.removeItem(STORAGE_DATA_KEYS.AUTH);
     }
     return Promise.reject(err);
   },
