@@ -7,7 +7,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
 
   return {
-    base: mode === "development" ? "/" : "/biz/",
+    base: mode === "development" ? "/" : "/law/",
     plugins: [react(), tailwindcss()],
     optimizeDeps: {
       include: ["jspdf", "jspdf-autotable", "xlsx", "file-saver"],
