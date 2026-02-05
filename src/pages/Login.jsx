@@ -6,7 +6,7 @@ import { useForm } from "../hooks/useForm.js";
 import { authService } from "../services/authService.js";
 import Loader from "../components/Loader.jsx";
 import { UI_TEXT, FORM_FIELDS, ROUTES } from "../constants/ui.js";
-import { STORAGE_KEYS } from "../constants/storage.js";
+import { STORAGE_KEY } from "../constants/storage.js";
 import logo from "../assets/images/1pass_logo.jpg";
 
 const INITIAL_FORM_VALUES = {
@@ -23,7 +23,7 @@ export default function Login() {
   const [errorMessage, setErrorMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(() => {
-    return localStorage.getItem(STORAGE_KEYS.REMEMBER_ME) === "true";
+    return localStorage.getItem(STORAGE_KEY.REMEMBER_ME) === "true";
   });
   const [logoError, setLogoError] = useState(false);
 
@@ -32,7 +32,7 @@ export default function Login() {
 
   // Load saved email if "Remember Me" was checked
   useEffect(() => {
-    const savedEmail = localStorage.getItem(STORAGE_KEYS.SAVED_EMAIL);
+    const savedEmail = localStorage.getItem(STORAGE_KEY.SAVED_EMAIL);
     if (savedEmail) {
       setFieldValue(FORM_FIELDS.USER_ID, savedEmail);
     }
@@ -54,13 +54,13 @@ export default function Login() {
       // Save email if "Remember Me" is checked
       if (rememberMe) {
         localStorage.setItem(
-          STORAGE_KEYS.SAVED_EMAIL,
+          STORAGE_KEY.SAVED_EMAIL,
           values[FORM_FIELDS.USER_ID],
         );
-        localStorage.setItem(STORAGE_KEYS.REMEMBER_ME, "true");
+        localStorage.setItem(STORAGE_KEY.REMEMBER_ME, "true");
       } else {
-        localStorage.removeItem(STORAGE_KEYS.SAVED_EMAIL);
-        localStorage.setItem(STORAGE_KEYS.REMEMBER_ME, "false");
+        localStorage.removeItem(STORAGE_KEY.SAVED_EMAIL);
+        localStorage.setItem(STORAGE_KEY.REMEMBER_ME, "false");
       }
 
       const tokens = await authService.login({

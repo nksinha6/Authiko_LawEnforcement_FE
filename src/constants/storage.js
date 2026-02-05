@@ -1,4 +1,4 @@
-export const STORAGE_KEYS = {
+export const STORAGE_KEY = {
   REMEMBER_ME: "rememberMe",
   SAVED_EMAIL: "savedEmail",
   AUTH_TOKEN: "authToken",
