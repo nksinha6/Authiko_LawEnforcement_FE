@@ -15,10 +15,10 @@ export const API_ENDPOINTS = {
 // Storage Keys
 export const STORAGE_DATA_KEYS = {
   AUTH: "onepass_auth",
-  ACCESS_TOKEN: "onepass_access_token",
-  REFRESH_TOKEN: "onepass_refresh_token",
-  TOKEN_EXPIRES_AT: "onepass_token_expires_at",
-  USER_DATA: "onepass_user_data",
+  ACCESS_DATA_TOKEN: "onepass_ACCESS_DATA_TOKEN_Law",
+  REFRESH_DATA_TOKEN: "onepass_REFRESH_DATA_TOKEN_Law",
+  TOKEN_EXPIRES_AT: "onepass_token_expires_at_Law",
+  USER_DATA: "onepass_user_data_Law",
 };
 
 // Gender Mapping (API code to UI label)

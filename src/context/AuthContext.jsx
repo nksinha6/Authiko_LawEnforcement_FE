@@ -100,7 +100,9 @@ export function AuthProvider({ children }) {
       };
 
       // Check if access token exists and is not expired
-      const accessToken = getItemFromStorages(STORAGE_DATA_KEYS.ACCESS_TOKEN);
+      const accessToken = getItemFromStorages(
+        STORAGE_DATA_KEYS.ACCESS_DATA_TOKEN,
+      );
       const expiresAt = getItemFromStorages(STORAGE_DATA_KEYS.TOKEN_EXPIRES_AT);
 
       if (accessToken && expiresAt) {
@@ -117,7 +119,7 @@ export function AuthProvider({ children }) {
 
             // Also store in storage for quick access
             const storage = sessionStorage.getItem(
-              STORAGE_DATA_KEYS.ACCESS_TOKEN,
+              STORAGE_DATA_KEYS.ACCESS_DATA_TOKEN,
             )
               ? sessionStorage
               : localStorage;
@@ -159,13 +161,13 @@ export function AuthProvider({ children }) {
     if (typeof window !== "undefined") {
       // Remove auth data from both storages to be safe
       localStorage.removeItem(STORAGE_DATA_KEYS.AUTH);
-      localStorage.removeItem(STORAGE_DATA_KEYS.ACCESS_TOKEN);
-      localStorage.removeItem(STORAGE_DATA_KEYS.REFRESH_TOKEN);
+      localStorage.removeItem(STORAGE_DATA_KEYS.ACCESS_DATA_TOKEN);
+      localStorage.removeItem(STORAGE_DATA_KEYS.REFRESH_DATA_TOKEN);
       localStorage.removeItem(STORAGE_DATA_KEYS.TOKEN_EXPIRES_AT);
       localStorage.removeItem(STORAGE_DATA_KEYS.USER_DATA);
       sessionStorage.removeItem(STORAGE_DATA_KEYS.AUTH);
-      sessionStorage.removeItem(STORAGE_DATA_KEYS.ACCESS_TOKEN);
-      sessionStorage.removeItem(STORAGE_DATA_KEYS.REFRESH_TOKEN);
+      sessionStorage.removeItem(STORAGE_DATA_KEYS.ACCESS_DATA_TOKEN);
+      sessionStorage.removeItem(STORAGE_DATA_KEYS.REFRESH_DATA_TOKEN);
       sessionStorage.removeItem(STORAGE_DATA_KEYS.TOKEN_EXPIRES_AT);
       sessionStorage.removeItem(STORAGE_DATA_KEYS.USER_DATA);
     }
@@ -184,8 +186,11 @@ export function AuthProvider({ children }) {
     if (typeof window !== "undefined") {
       const storage = remember ? localStorage : sessionStorage;
       storage.setItem(STORAGE_DATA_KEYS.AUTH, "true");
-      storage.setItem(STORAGE_DATA_KEYS.ACCESS_TOKEN, tokens.accessToken);
-      storage.setItem(STORAGE_DATA_KEYS.REFRESH_TOKEN, tokens.refreshToken);
+      storage.setItem(STORAGE_DATA_KEYS.ACCESS_DATA_TOKEN, tokens.accessToken);
+      storage.setItem(
+        STORAGE_DATA_KEYS.REFRESH_DATA_TOKEN,
+        tokens.refreshToken,
+      );
       storage.setItem(STORAGE_DATA_KEYS.TOKEN_EXPIRES_AT, tokens.expiresAt);
       storage.setItem(STORAGE_DATA_KEYS.USER_DATA, JSON.stringify(ids));
     }
