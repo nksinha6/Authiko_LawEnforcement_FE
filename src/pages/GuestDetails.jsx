@@ -187,8 +187,7 @@ export default function GuestDetails() {
   );
 
   const fetchPropertyDetails = useCallback(async () => {
-    // const propertyId = getPropertyIdFromSession();
-    const propertyId = 1;
+    const propertyId = getPropertyIdFromSession();
 
     if (!propertyId) {
       console.warn("Property ID not found in session storage");

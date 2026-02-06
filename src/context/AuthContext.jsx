@@ -2,7 +2,7 @@ import { createContext, useContext, useMemo, useState, useEffect } from "react";
 import { STORAGE_DATA_KEYS } from "../constants/config.js";
 
 // Utility function to decode JWT token
-const decodeJWT = (token) => {
+export const decodeJWT = (token) => {
   try {
     if (!token) return null;
 
@@ -26,7 +26,7 @@ const decodeJWT = (token) => {
 };
 
 // Utility function to extract tenantId and propertyIds from token
-const extractIdsFromToken = (decodedToken) => {
+export const extractIdsFromToken = (decodedToken) => {
   if (!decodedToken) return { tenantId: null, propertyIds: [] };
 
   // Extract tenantId (it might be string or number)

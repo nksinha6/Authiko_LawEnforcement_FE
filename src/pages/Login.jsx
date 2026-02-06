@@ -8,6 +8,7 @@ import Loader from "../components/Loader.jsx";
 import { UI_TEXT, FORM_FIELDS, ROUTES } from "../constants/ui.js";
 import { STORAGE_KEY } from "../constants/storage.js";
 import logo from "../assets/images/1pass_logo.jpg";
+import { decodeJWT, extractIdsFromToken } from "../context/AuthContext.jsx";
 
 const INITIAL_FORM_VALUES = {
   [FORM_FIELDS.USER_ID]: "",
@@ -51,7 +52,23 @@ export default function Login() {
     setIsSubmitting(true);
 
     try {
-      // Save email if "Remember Me" is checked
+      const tokens = await authService.login({
+        userId: values[FORM_FIELDS.USER_ID],
+        password: values[FORM_FIELDS.PASSWORD],
+      });
+
+      // 🔍 Decode token using existing logic
+      const decodedToken = decodeJWT(tokens.accessToken);
+      const { role } = extractIdsFromToken(decodedToken);
+
+      // Normalize role
+      if (role?.toLowerCase() !== "lawenforcement") {
+        setErrorMessage(
+          "Access denied. Only Law Enforcement users are allowed to login.",
+        );
+        return;
+      }
+
       if (rememberMe) {
         localStorage.setItem(
           STORAGE_KEY.SAVED_EMAIL,
@@ -63,13 +80,10 @@ export default function Login() {
         localStorage.setItem(STORAGE_KEY.REMEMBER_ME, "false");
       }
 
-      const tokens = await authService.login({
-        userId: values[FORM_FIELDS.USER_ID],
-        password: values[FORM_FIELDS.PASSWORD],
-      });
-
-      // Persist tokens according to "Remember me" preference
+      // ✅ Save auth state
       login(tokens, rememberMe);
+
+      // ✅ Navigate
       navigate(from, { replace: true });
     } catch (error) {
       setErrorMessage(error.message || "Login failed. Please try again.");
